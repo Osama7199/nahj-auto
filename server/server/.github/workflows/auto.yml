@@ -2,6 +2,22 @@ name: الطيار الآلي
 on:
   workflow_dispatch:
     inputs:
+      audio_url:
+        description: 'رابط الصوت المباشر (Google Drive أو Dropbox، عام لأي شخص معه الرابط)'
+        required: false
+        default: ''
+      image_url:
+        description: 'رابط صورة القارئ (اختياري)'
+        required: false
+        default: ''
+      bgm_url:
+        description: 'رابط الموسيقى الخلفية (اختياري)'
+        required: false
+        default: ''
+      settings_url:
+        description: 'رابط settings.json (اختياري، وإلا تُستخدم الافتراضية)'
+        required: false
+        default: ''
       reciter:
         description: 'اسم القارئ (اختياري)'
         required: false
@@ -33,6 +49,10 @@ jobs:
           ELEVEN_KEY: ${{ secrets.ELEVEN_KEY }}
           BP_KEY: ${{ secrets.BP_KEY }}
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          AUDIO_URL: ${{ inputs.audio_url }}
+          IMAGE_URL: ${{ inputs.image_url }}
+          BGM_URL: ${{ inputs.bgm_url }}
+          SETTINGS_URL: ${{ inputs.settings_url }}
           RECITER: ${{ inputs.reciter }}
           START_DATE: ${{ inputs.start_date }}
           TIME: ${{ inputs.time }}
