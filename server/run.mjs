@@ -43,7 +43,10 @@ if (!E.START_DATE) fail('أدخل تاريخ أول نشر');
 let settings = {}; try { if (settingsPath) settings = JSON.parse(fs.readFileSync(settingsPath, 'utf8')); } catch (e) { fail('ملف settings.json غير صالح: ' + e.message); }
 fs.mkdirSync(path.join(root, 'out'), { recursive: true });
 
-const keys = { gemini: E.GEMINI_KEY, el: E.ELEVEN_KEY || '', bp: E.BP_KEY, ntfy: E.NTFY_TOPIC || '' };
+// مفتاح ElevenLabs الصحيح يبدأ بـ sk_ . إن وُضع «معرّف المفتاح» بالخطأ يُهمَل هنا بدل أن يفشل الطلب (400)، ويكمل التحليل بـGemini وحده
+let elKey = (E.ELEVEN_KEY || '').trim();
+if (elKey && !elKey.startsWith('sk_')) { console.log('⚠ ELEVEN_KEY لا يبدأ بـ sk_ (غالباً وُضع معرّف المفتاح وليس المفتاح نفسه). تم تجاهله وسيكمل العمل بـGemini وحده. أنشئ مفتاحاً جديداً وانسخه لحظة ظهوره.'); elKey = ''; }
+const keys = { gemini: E.GEMINI_KEY, el: elKey, bp: E.BP_KEY, ntfy: E.NTFY_TOPIC || '' };
 // نخدم المجلد عبر http محلي بدل file:// حتى يعمل التخزين والشبكة كما في الموقع العادي
 const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.json': 'application/json', '.mp3': 'audio/mpeg', '.jpg': 'image/jpeg', '.png': 'image/png' };
 const srv = http.createServer((req, res) => { const f = path.join(root, req.url.split('?')[0] === '/' ? 'tool.html' : decodeURIComponent(req.url.split('?')[0])); if (!f.startsWith(root) || !fs.existsSync(f) || fs.statSync(f).isDirectory()) { res.writeHead(404); return res.end(); } res.writeHead(200, { 'Content-Type': MIME[path.extname(f)] || 'application/octet-stream' }); fs.createReadStream(f).pipe(res); });
@@ -67,7 +70,7 @@ const page = await ctx.newPage();
 page.on('pageerror', e => console.log('⚠ خطأ في الصفحة:', e.message));
 page.on('dialog', d => d.accept().catch(() => {}));
 // خطة التقسيم التي تطبعها الأداة (عدد الفصول ونسبة تغطية الصوت) تظهر في سجل GitHub
-page.on('console', m => { const t = m.text(); if (t.startsWith('[plan]')) console.log(t); });
+page.on('console', m => { const t = m.text(); if (t.startsWith('[plan]') || t.startsWith('[bp]') || t.startsWith('[audio]')) console.log(t); });
 // الأداة تنزّل كل فيديو وغلاف كأنها تحفظهما على الجهاز؛ نلتقطها هنا لتظهر في Artifacts
 page.on('download', async d => { try { await d.saveAs(path.join(root, 'out', d.suggestedFilename())); console.log('💾 حُفظ: ' + d.suggestedFilename()); } catch (e) { console.log('⚠ تعذّر حفظ ' + d.suggestedFilename() + ': ' + e.message); } });
 await page.goto(`http://127.0.0.1:${PORT}/tool.html`, { waitUntil: 'load' });
