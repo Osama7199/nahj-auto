@@ -59,7 +59,14 @@ const TOOL = (() => {
   return found[0];
 })();
 if (!fs.readFileSync(TOOL, 'utf8').includes('deleteMediaAfterPublish')) console.log('⚠ نسخة tool.html قديمة (بلا الإصلاحات الأخيرة). ارفع النسخة الجديدة');
-const srv = http.createServer((req, res) => { const p0 = req.url.split('?')[0], f = (p0 === '/' || p0 === '/tool.html') ? TOOL : path.join(root, decodeURIComponent(p0)); if (!f.startsWith(root) || !fs.existsSync(f) || fs.statSync(f).isDirectory()) { res.writeHead(404); return res.end(); } res.writeHead(200, { 'Content-Type': MIME[path.extname(f)] || 'application/octet-stream' }); fs.createReadStream(f).pipe(res); });
+const srv = http.createServer((req, res) => {
+  const p0 = req.url.split('?')[0], f = (p0 === '/' || p0 === '/tool.html') ? TOOL : path.join(root, decodeURIComponent(p0));
+  if (!f.startsWith(root) || !fs.existsSync(f) || fs.statSync(f).isDirectory()) { console.log('404 للمسار: ' + p0); res.writeHead(404); return res.end(); }
+  res.writeHead(200, { 'Content-Type': MIME[path.extname(f)] || 'application/octet-stream' });
+  const s = fs.createReadStream(f);
+  s.on('error', e => { console.log('⚠ خطأ قراءة ' + f + ': ' + e.message); res.destroy(); });
+  s.pipe(res);
+});
 await new Promise(r => srv.listen(0, '127.0.0.1', r)); const PORT = srv.address().port;
 const launchOpts = E.CHROME_PATH ? { executablePath: E.CHROME_PATH } : { channel: 'chrome' };
 const browser = await chromium.launch({
@@ -83,6 +90,14 @@ page.on('dialog', d => d.accept().catch(() => {}));
 page.on('console', m => { const t = m.text(); if (t.startsWith('[plan]') || t.startsWith('[bp]') || t.startsWith('[audio]')) console.log(t); });
 // الأداة تنزّل كل فيديو وغلاف كأنها تحفظهما على الجهاز؛ نلتقطها هنا لتظهر في Artifacts
 page.on('download', async d => { try { await d.saveAs(path.join(root, 'out', d.suggestedFilename())); console.log('💾 حُفظ: ' + d.suggestedFilename()); } catch (e) { console.log('⚠ تعذّر حفظ ' + d.suggestedFilename() + ': ' + e.message); } });
+
+// تشخيص: نتأكد من ردّ السيرفر المحلي قبل فتح الصفحة
+try {
+  const r = await fetch(`http://127.0.0.1:${PORT}/tool.html`);
+  const body = await r.text();
+  console.log('STATUS', r.status, '| TOOL =', TOOL, '| حجم الرد =', body.length, '| root =', root);
+} catch (e) { console.log('⚠ فشل فحص السيرفر المحلي: ' + e.message); }
+
 await page.goto(`http://127.0.0.1:${PORT}/tool.html`, { waitUntil: 'load' });
 await page.waitForSelector('#wzStart', { timeout: 60000 });
 // تأكيد أن إعداداتك (الخطوط والألوان) وصلت للأداة فعلاً، لا أن تُستخدم الافتراضية دون أن تعلم
@@ -113,6 +128,22 @@ await page.waitForFunction(() => window.__apState === 'ready' || window.__apStat
 const st = await page.evaluate(() => window.__apState);
 await page.screenshot({ path: path.join(root, 'out', 'after-analysis.png') }).catch(() => {});
 console.log('حالة التحليل: ' + st);
+if (st !== 'ready') { clearInterval(logTimer); console.log(await page.evaluate(() => document.getElementById('wzNote').textContent)); await browser.close(); fail('فشل التحليل. راجع السجل أعلاه', 1); }
+
+console.log('▶ تنفيذ الخطة كاملة (إنشاء وجدولة)...');
+await page.waitForSelector('#wzAuto', { state: 'attached', timeout: 60000 });
+await page.evaluate(() => document.getElementById('wzAuto').click());
+await page.waitForFunction(() => (window.__apDone || 0) >= 1, null, { timeout: 5 * 60 * 60 * 1000, polling: 5000 });
+clearInterval(logTimer);
+const failed = await page.evaluate(() => window.__apFailed || 0);
+console.log(await page.evaluate(() => document.getElementById('wzNote').textContent));
+await page.screenshot({ path: path.join(root, 'out', 'final.png') }).catch(() => {});
+const finalNote = await page.evaluate(() => document.getElementById('wzNote').textContent || '').catch(() => '');
+await browser.close();
+const unsched = (finalNote.match(/فشل النشر\/الجدولة/g) || []).length;
+if (failed) fail(failed + ' من الفصول فشلت. راجع السجل', 1);
+if (unsched) fail(unsched + ' من الفيديوهات أُنشئت لكن لم تُجدول في BulkPublish. راجع السبب في السجل (مثلاً امتلاء مساحة الوسائط في الخطة المجانية)، والفيديوهات محفوظة في Artifacts', 1);
+console.log('✅ انتهى');'حالة التحليل: ' + st);
 if (st !== 'ready') { clearInterval(logTimer); console.log(await page.evaluate(() => document.getElementById('wzNote').textContent)); await browser.close(); fail('فشل التحليل. راجع السجل أعلاه', 1); }
 
 console.log('▶ تنفيذ الخطة كاملة (إنشاء وجدولة)...');
