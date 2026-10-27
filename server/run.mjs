@@ -49,7 +49,17 @@ if (elKey && !elKey.startsWith('sk_')) { console.log('⚠ ELEVEN_KEY لا يبد
 const keys = { gemini: E.GEMINI_KEY, el: elKey, bp: E.BP_KEY, ntfy: E.NTFY_TOPIC || '' };
 // نخدم المجلد عبر http محلي بدل file:// حتى يعمل التخزين والشبكة كما في الموقع العادي
 const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.json': 'application/json', '.mp3': 'audio/mpeg', '.jpg': 'image/jpeg', '.png': 'image/png' };
-const srv = http.createServer((req, res) => { const f = path.join(root, req.url.split('?')[0] === '/' ? 'tool.html' : decodeURIComponent(req.url.split('?')[0])); if (!f.startsWith(root) || !fs.existsSync(f) || fs.statSync(f).isDirectory()) { res.writeHead(404); return res.end(); } res.writeHead(200, { 'Content-Type': MIME[path.extname(f)] || 'application/octet-stream' }); fs.createReadStream(f).pipe(res); });
+// نجد ملف الأداة: tool.html في جذر المستودع، وإلا أي ملف html فيه الأداة (قد يُسمّى tool (1).html عند التنزيل من الهاتف)
+const TOOL = (() => {
+  const exact = path.join(root, 'tool.html'); if (fs.existsSync(exact)) return exact;
+  const found = [];
+  for (const d of [root, path.join(root, 'server')]) { try { for (const f of fs.readdirSync(d)) if (/\.html?$/i.test(f) && fs.readFileSync(path.join(d, f), 'utf8').includes('id="wzStart"')) found.push(path.join(d, f)); } catch (_) {} }
+  if (!found.length) { let ls = []; try { ls = fs.readdirSync(root); } catch (_) {} fail('لم أجد ملف الأداة tool.html في جذر المستودع. الموجود في الجذر: ' + ls.join('، ') + '. ارفع tool.html إلى الجذر (وليس داخل server) وباسم tool.html تماماً'); }
+  console.log('⚠ tool.html غير موجود في الجذر، سأستخدم: ' + path.relative(root, found[0]) + ' (غيّر اسمه إلى tool.html وانقله للجذر)');
+  return found[0];
+})();
+if (!fs.readFileSync(TOOL, 'utf8').includes('deleteMediaAfterPublish')) console.log('⚠ نسخة tool.html قديمة (بلا الإصلاحات الأخيرة). ارفع النسخة الجديدة');
+const srv = http.createServer((req, res) => { const p0 = req.url.split('?')[0], f = (p0 === '/' || p0 === '/tool.html') ? TOOL : path.join(root, decodeURIComponent(p0)); if (!f.startsWith(root) || !fs.existsSync(f) || fs.statSync(f).isDirectory()) { res.writeHead(404); return res.end(); } res.writeHead(200, { 'Content-Type': MIME[path.extname(f)] || 'application/octet-stream' }); fs.createReadStream(f).pipe(res); });
 await new Promise(r => srv.listen(0, '127.0.0.1', r)); const PORT = srv.address().port;
 const launchOpts = E.CHROME_PATH ? { executablePath: E.CHROME_PATH } : { channel: 'chrome' };
 const browser = await chromium.launch({
