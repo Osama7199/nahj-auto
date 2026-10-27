@@ -143,20 +143,4 @@ await browser.close();
 const unsched = (finalNote.match(/فشل النشر\/الجدولة/g) || []).length;
 if (failed) fail(failed + ' من الفصول فشلت. راجع السجل', 1);
 if (unsched) fail(unsched + ' من الفيديوهات أُنشئت لكن لم تُجدول في BulkPublish. راجع السبب في السجل (مثلاً امتلاء مساحة الوسائط في الخطة المجانية)، والفيديوهات محفوظة في Artifacts', 1);
-console.log('✅ انتهى');'حالة التحليل: ' + st);
-if (st !== 'ready') { clearInterval(logTimer); console.log(await page.evaluate(() => document.getElementById('wzNote').textContent)); await browser.close(); fail('فشل التحليل. راجع السجل أعلاه', 1); }
-
-console.log('▶ تنفيذ الخطة كاملة (إنشاء وجدولة)...');
-await page.waitForSelector('#wzAuto', { state: 'attached', timeout: 60000 });
-await page.evaluate(() => document.getElementById('wzAuto').click());
-await page.waitForFunction(() => (window.__apDone || 0) >= 1, null, { timeout: 5 * 60 * 60 * 1000, polling: 5000 });
-clearInterval(logTimer);
-const failed = await page.evaluate(() => window.__apFailed || 0);
-console.log(await page.evaluate(() => document.getElementById('wzNote').textContent));
-await page.screenshot({ path: path.join(root, 'out', 'final.png') }).catch(() => {});
-const finalNote = await page.evaluate(() => document.getElementById('wzNote').textContent || '').catch(() => '');
-await browser.close();
-const unsched = (finalNote.match(/فشل النشر\/الجدولة/g) || []).length;
-if (failed) fail(failed + ' من الفصول فشلت. راجع السجل', 1);
-if (unsched) fail(unsched + ' من الفيديوهات أُنشئت لكن لم تُجدول في BulkPublish. راجع السبب في السجل (مثلاً امتلاء مساحة الوسائط في الخطة المجانية)، والفيديوهات محفوظة في Artifacts', 1);
 console.log('✅ انتهى');
