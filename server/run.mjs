@@ -4,11 +4,14 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import http from 'node:http';
+import { spawnSync } from 'node:child_process';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const E = process.env;
 const pick = base => { const d = path.join(root, 'inputs'); if (!fs.existsSync(d)) return null; const f = fs.readdirSync(d).find(x => x.toLowerCase().startsWith(base + '.')); return f ? path.join(d, f) : null; };
-const fail = (m, code = 2) => { console.error('❌ ' + m); process.exit(code); };
+// إشعار ntfy متزامن (curl) حتى يصل قبل إنهاء العملية
+const notify = (title, body) => { const t = (E.NTFY_TOPIC || '').trim(); if (!t) return; try { spawnSync('curl', ['-s', '-m', '10', '-H', 'Content-Type: application/json', '-d', JSON.stringify({ topic: t, title, message: String(body).slice(0, 900), priority: 4, tags: ['warning'] }), 'https://ntfy.sh'], { stdio: 'ignore' }); } catch (_) {} };
+const fail = (m, code = 2) => { console.error('❌ ' + m); notify('توقف الطيار الآلي', m); process.exit(code); };
 // يحوّل روابط المشاركة (Google Drive / Dropbox) إلى روابط تحميل مباشر
 const direct = u => {
   u = u.trim();
@@ -38,15 +41,35 @@ const audio = await get(E.AUDIO_URL, 'audio', '.mp3'), person = await get(E.IMAG
 if (!audio) fail('أدخل رابط الصوت (audio_url) عند تشغيل الـworkflow، أو ضع audio.mp3 في مجلد inputs');
 if (!person) fail('الصورة إلزامية: أدخل رابط صورة القارئ (image_url) أو ضع person.jpg في مجلد inputs');
 if (!E.GEMINI_KEY) fail('ينقص السرّ GEMINI_KEY');
-if (!E.BP_KEY) fail('ينقص السرّ BP_KEY');
+const BPKEY = (E.BP_KEY || '').trim();
+if (!BPKEY) fail('ينقص السرّ BP_KEY');
 if (!E.START_DATE) fail('أدخل تاريخ أول نشر');
+// التاريخ يجب أن يكون صيغته YYYY-MM-DD وأن يكون موعد أول نشر في المستقبل (حسب المنطقة الزمنية المختارة)
+{
+  const tz = E.TZ_ID || 'Asia/Riyadh', tm = (E.TIME || '19:00').trim();
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(E.START_DATE.trim())) fail('صيغة تاريخ البداية يجب أن تكون YYYY-MM-DD مثل 2026-10-29');
+  let nowStr = ''; try { nowStr = new Date().toLocaleString('sv-SE', { timeZone: tz }).slice(0, 16).replace(' ', 'T'); } catch (_) { fail('المنطقة الزمنية غير صالحة: ' + tz); }
+  if (E.START_DATE.trim() + 'T' + tm <= nowStr) fail('موعد أول نشر (' + E.START_DATE.trim() + ' ' + tm + ') قد مضى. الآن عندك: ' + nowStr.replace('T', ' ') + '. اختر تاريخًا لاحقًا');
+}
 let settings = {}; try { if (settingsPath) settings = JSON.parse(fs.readFileSync(settingsPath, 'utf8')); } catch (e) { fail('ملف settings.json غير صالح: ' + e.message); }
 fs.mkdirSync(path.join(root, 'out'), { recursive: true });
 
 // مفتاح ElevenLabs الصحيح يبدأ بـ sk_ . إن وُضع «معرّف المفتاح» بالخطأ يُهمَل هنا بدل أن يفشل الطلب (400)، ويكمل التحليل بـGemini وحده
 let elKey = (E.ELEVEN_KEY || '').trim();
 if (elKey && !elKey.startsWith('sk_')) { console.log('⚠ ELEVEN_KEY لا يبدأ بـ sk_ (غالباً وُضع معرّف المفتاح وليس المفتاح نفسه). تم تجاهله وسيكمل العمل بـGemini وحده. أنشئ مفتاحاً جديداً وانسخه لحظة ظهوره.'); elKey = ''; }
-const keys = { gemini: E.GEMINI_KEY, el: elKey, bp: E.BP_KEY, ntfy: E.NTFY_TOPIC || '' };
+const keys = { gemini: E.GEMINI_KEY, el: elKey, bp: BPKEY, ntfy: E.NTFY_TOPIC || '' };
+// فحص مفتاح BulkPublish والقنوات الآن، قبل التحليل وقبل أي استهلاك: إن فشل نتوقف فورًا بدل انتظار ساعات
+{
+  let r, j = {};
+  try { r = await fetch('https://app.bulkpublish.com/api/channels', { headers: { Authorization: 'Bearer ' + BPKEY }, signal: AbortSignal.timeout(30000) }); j = await r.json().catch(() => ({})); }
+  catch (e) { fail('تعذّر الاتصال بـBulkPublish: ' + e.message); }
+  if (r.status === 401 || r.status === 403) fail('مفتاح BulkPublish مرفوض (HTTP ' + r.status + '). أنشئ مفتاحًا جديدًا وضعه في السرّ BP_KEY دون مسافات');
+  if (!r.ok) fail('BulkPublish ردّ بخطأ HTTP ' + r.status + '. تحقق من المفتاح والخدمة');
+  const chs = (j.channels || j.data || []).filter(c => c && c.id != null && c.platform);
+  if (!chs.length) fail('المفتاح صالح لكن لا توجد قنوات مربوطة في BulkPublish. اربط القنوات من لوحة BulkPublish ثم أعد التشغيل');
+  console.log('✔ BulkPublish: ' + chs.length + ' قناة (' + chs.map(c => c.platform).join('، ') + ')');
+  if (chs.length < 4) console.log('⚠ القنوات أقل من 4 (المتوقع YouTube وTikTok وInstagram وFacebook). تأكد أن المربوط هو ما تريده');
+}
 // نخدم المجلد عبر http محلي بدل file:// حتى يعمل التخزين والشبكة كما في الموقع العادي
 const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.json': 'application/json', '.mp3': 'audio/mpeg', '.jpg': 'image/jpeg', '.png': 'image/png' };
 // نجد ملف الأداة: tool.html في جذر المستودع، وإلا أي ملف html فيه الأداة (قد يُسمّى tool (1).html عند التنزيل من الهاتف)
@@ -87,7 +110,7 @@ const page = await ctx.newPage();
 page.on('pageerror', e => console.log('⚠ خطأ في الصفحة:', e.message));
 page.on('dialog', d => d.accept().catch(() => {}));
 // خطة التقسيم التي تطبعها الأداة (عدد الفصول ونسبة تغطية الصوت) تظهر في سجل GitHub
-page.on('console', m => { const t = m.text(); if (t.startsWith('[plan]') || t.startsWith('[bp]') || t.startsWith('[audio]')) console.log(t); });
+page.on('console', m => { const t = m.text(); if (t.startsWith('[plan]') || t.startsWith('[bp]') || t.startsWith('[audio]') || t.startsWith('[export]') || t.startsWith('[timing]') || t.startsWith('[sync]')) console.log(t); });
 // الأداة تنزّل كل فيديو وغلاف كأنها تحفظهما على الجهاز؛ نلتقطها هنا لتظهر في Artifacts
 page.on('download', async d => { try { await d.saveAs(path.join(root, 'out', d.suggestedFilename())); console.log('💾 حُفظ: ' + d.suggestedFilename()); } catch (e) { console.log('⚠ تعذّر حفظ ' + d.suggestedFilename() + ': ' + e.message); } });
 
@@ -124,18 +147,25 @@ await page.evaluate(({ d, t }) => { for (const [id, v] of [['wzSchedDate', d], [
 
 console.log('▶ بدء التحليل...');
 await page.click('#wzStart');
-await page.waitForFunction(() => window.__apState === 'ready' || window.__apState === 'error', null, { timeout: 90 * 60 * 1000, polling: 3000 });
+await page.waitForFunction(() => window.__apState === 'ready' || window.__apState === 'error', null, { timeout: 20 * 60 * 1000, polling: 3000 });
 const st = await page.evaluate(() => window.__apState);
 await page.screenshot({ path: path.join(root, 'out', 'after-analysis.png') }).catch(() => {});
 console.log('حالة التحليل: ' + st);
 if (st !== 'ready') { clearInterval(logTimer); console.log(await page.evaluate(() => document.getElementById('wzNote').textContent)); await browser.close(); fail('فشل التحليل. راجع السجل أعلاه', 1); }
 
+{
+  const nCh = await page.evaluate(() => document.querySelectorAll('#bpChannels input[type=checkbox]').length);
+  if (!nCh) { clearInterval(logTimer); await page.screenshot({ path: path.join(root, 'out', 'no-channels.png') }).catch(() => {}); await browser.close(); fail('الأداة لم تحمّل قنوات النشر رغم نجاح الفحص المسبق. أوقفنا التشغيل قبل إنشاء الفيديوهات'); }
+  console.log('✔ الأداة حمّلت ' + nCh + ' قناة نشر');
+}
 console.log('▶ تنفيذ الخطة كاملة (إنشاء وجدولة)...');
 await page.waitForSelector('#wzAuto', { state: 'attached', timeout: 60000 });
 await page.evaluate(() => document.getElementById('wzAuto').click());
-await page.waitForFunction(() => (window.__apDone || 0) >= 1, null, { timeout: 5 * 60 * 60 * 1000, polling: 5000 });
+await page.waitForFunction(() => (window.__apDone || 0) >= 1, null, { timeout: 90 * 60 * 1000, polling: 5000 });
 clearInterval(logTimer);
-const failed = await page.evaluate(() => window.__apFailed || 0);
+{ const ml = await page.evaluate(() => window.__metaLog || []).catch(() => []); ml.forEach(m => console.log('📝 بيانات: ' + m.title + (m.errs.length ? ' ❌ ' + m.errs.join('؛') : ' ✔') + (m.warn.length ? ' ⚠ ' + m.warn.join('؛') : ''))); }
+const failed = await page.evaluate(() => window.__apFailed || 0), abortMsg = await page.evaluate(() => window.__apAbortMsg || '');
+if (abortMsg) { clearInterval(logTimer); await browser.close(); fail('توقفت الأداة قبل إنشاء الفيديوهات: ' + abortMsg, 1); }
 console.log(await page.evaluate(() => document.getElementById('wzNote').textContent));
 await page.screenshot({ path: path.join(root, 'out', 'final.png') }).catch(() => {});
 const finalNote = await page.evaluate(() => document.getElementById('wzNote').textContent || '').catch(() => '');
@@ -143,4 +173,4 @@ await browser.close();
 const unsched = (finalNote.match(/فشل النشر\/الجدولة/g) || []).length;
 if (failed) fail(failed + ' من الفصول فشلت. راجع السجل', 1);
 if (unsched) fail(unsched + ' من الفيديوهات أُنشئت لكن لم تُجدول في BulkPublish. راجع السبب في السجل (مثلاً امتلاء مساحة الوسائط في الخطة المجانية)، والفيديوهات محفوظة في Artifacts', 1);
-console.log('✅ انتهى');
+console.log('✅ انتهى: الفيديوهات أُنشئت وقَبِل BulkPublish جدولتها. هذا لا يثبت النشر العام الفعلي على كل منصة؛ تحقق من لوحة BulkPublish ومن كل منصة عند موعد النشر.');
