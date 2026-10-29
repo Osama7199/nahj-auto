@@ -124,18 +124,14 @@
         <div id="personControls" class="flex flex-col gap-2 opacity-40 pointer-events-none transition-opacity">
 
           <div class="bg-app-bg p-2 rounded border border-amber-600/60 grid grid-cols-2 gap-x-3 gap-y-2">
-            <div class="col-span-2 text-[11px] font-bold text-amber-400">✦ نمط الحبر الاحترافي (دمج الصورة مع بقعة الحبر)</div>
-            <button id="inkPresetBtn" class="btn btn-amber col-span-2">تطبيق النمط الجاهز: قص السماء + حبر + اندماج</button>
+            <div class="col-span-2 text-[11px] font-bold text-amber-400">✦ النمط الاحترافي (دمج الصورة مع الخلفية)</div>
+            <button id="inkPresetBtn" class="btn btn-amber col-span-2">تطبيق النمط الجاهز: قص السماء + اندماج</button>
             <button id="skyCutBtn" class="btn">☁ إزالة السماء</button>
             <button id="snapBtn" class="btn">🎯 محاذاة مع بقعة الحبر</button>
             <label class="block col-span-2"><div class="lbl"><span>حساسية إزالة السماء</span><b id="skyTolVal">40</b></div><input id="skyTolSlider" type="range" min="10" max="120" value="40"></label>
             <label class="block"><div class="lbl"><span>نعومة حواف القص</span><b id="edgeSoftVal">0</b></div><input id="edgeSoftSlider" type="range" min="0" max="10" step="0.5" value="0"></label>
             <label class="block"><div class="lbl"><span>تقليص الحواف</span><b id="edgeShrinkVal">0</b></div><input id="edgeShrinkSlider" type="range" min="0" max="6" step="0.5" value="0"></label>
-            <label class="block"><div class="lbl"><span>حبر خلف الصورة</span><b id="inkVal">0%</b></div><input id="inkSlider" type="range" min="0" max="100" value="0"></label>
-            <label class="block"><div class="lbl"><span>خشونة الحبر</span><b id="inkRoughVal">50%</b></div><input id="inkRoughSlider" type="range" min="0" max="100" value="50"></label>
-            <label class="block"><div class="lbl"><span>رذاذ الحبر</span><b id="inkSplatVal">50%</b></div><input id="inkSplatSlider" type="range" min="0" max="100" value="50"></label>
             <label class="block"><div class="lbl"><span>ضباب القاعدة</span><b id="mistVal">0%</b></div><input id="mistSlider" type="range" min="0" max="100" value="0"></label>
-            <button id="inkSeedBtn" class="btn col-span-2">🎲 شكل حبر آخر</button>
           </div>
 
           <div class="bg-app-bg p-2 rounded border border-app-border flex flex-col gap-2">
@@ -212,7 +208,7 @@
               <option value="Reem Kufi">ريم كوفي</option>
               <option value="Katibeh">كاتبة</option>
             </select>
-            <input id="subColorPicker" type="color" value="#1A1A1A" class="w-full h-7 cursor-pointer border border-slate-600">
+            <input id="subColorPicker" type="color" value="#6B5236" class="w-full h-7 cursor-pointer border border-slate-600">
             <label class="block"><div class="lbl"><span>الحجم</span><b id="subFontSizeVal">22</b></div><input id="subFontSizeSlider" type="range" min="12" max="70" value="22"></label>
             <label class="block"><div class="lbl"><span>رأسي</span><b id="subPosYVal">48%</b></div><input id="subPosYSlider" type="range" min="5" max="97" step="0.5" value="48"></label>
             <label class="block"><div class="lbl"><span>أفقي</span><b id="subPosXVal">50%</b></div><input id="subPosXSlider" type="range" min="0" max="100" step="0.5" value="50"></label>
@@ -375,7 +371,7 @@
             <label class="block"><div class="lbl"><span>أقصى كلمات للجملة الآلية</span><b id="capWordsVal">16</b></div><input id="capWordsSlider" type="range" min="6" max="40" value="16"></label>
             <label class="block"><div class="lbl"><span>أقصى كلمات في السطر</span><b id="chunkWordsVal">5</b></div><input id="chunkWordsSlider" type="range" min="2" max="10" value="5"></label>
             <label class="flex items-center gap-2 text-[11px] text-slate-300 self-end"><input id="hideMainToggle" type="checkbox" class="accent-amber-500"> إخفاء النص الرئيسي</label>
-            <label class="flex items-center gap-2 text-[11px] text-slate-300 self-end"><input id="capHiToggle" type="checkbox" class="accent-amber-500"> تمييز الكلمة المنطوقة</label>
+            <label class="flex items-center gap-2 text-[11px] text-slate-300 self-end"><input id="capHiToggle" type="checkbox" checked class="accent-amber-500"> تمييز الكلمة المنطوقة</label>
           </div>
 
           <div class="bg-app-bg p-2 rounded border border-amber-600/60 grid grid-cols-2 gap-x-3 gap-y-2">
@@ -625,7 +621,7 @@
     <button id="wzExport" class="btn" type="button">📤 تصدير إعداداتي لملف (للتشغيل على الخادم)</button>
     <button id="wzCheckPosts" class="btn" type="button">🔎 افحص حالة ما نُشر أو جُدول (وأعد المحاولة عند الفشل)</button>
     <label class="flex items-center gap-2 text-[12px]" style="color:#cfe3de"><input id="wzAiCut" type="checkbox" checked class="accent-amber-500"> أزل خلفية الصورة الجديدة بدقة بالذكاء (تحتاج إنترنت)</label>
-    <label class="flex items-center gap-2 text-[12px]" style="color:#cfe3de"><input id="wzInk" type="checkbox" checked class="accent-amber-500"> طبّق نمط الحبر والمحاذاة على الصورة الجديدة فقط</label>
+    <label class="flex items-center gap-2 text-[12px]" style="color:#cfe3de"><input id="wzInk" type="checkbox" checked class="accent-amber-500"> طبّق النمط الجاهز والمحاذاة على الصورة الجديدة فقط</label>
     <button id="wzStart" class="btn btn-amber" type="button">✨ ابدأ</button>
     <div id="wzProg" class="wz-card hidden"><div style="height:9px;background:#0d1719;border-radius:6px;overflow:hidden"><div id="wzProgBar" style="height:100%;width:0;background:linear-gradient(90deg,#8fc4b0,#d9b36c);transition:width .5s"></div></div><div id="wzProgTxt" class="text-[12px] mt-2" style="color:#e8c982;white-space:pre-line"></div></div>
     <div id="wzNote" class="wz-card text-[13px] leading-relaxed" style="white-space:pre-line;color:#e8c982;min-height:64px">✓ جاهز. اختر الصوت والصورة ثم اضغط «ابدأ»، وسأعرض لك هنا كل ما يحدث لحظة بلحظة.</div>
@@ -689,7 +685,7 @@ if (window.__oauthPopup) throw new Error('oauth popup');
 
   // ===== الحالة المحفوظة تلقائياً =====
   const STATE_IDS = [
-    'personScaleSlider','personFadeSlider','personPosXSlider','personPosYSlider','personSideFadeSlider','personTopFadeSlider','personOvalSlider','personOpacitySlider','faceGlowSlider','personEnhanceSlider','faceXSlider','faceYSlider','cutTolSlider','multiplyToggle','capAnim','capHiToggle','capFontSelect','capColor','capHiColor','capSizeSlider','capPosYSlider','capWordsSlider','chunkWordsSlider','capOffsetSlider','voiceVolSlider','reverbType','reverbMixSlider','bgmVolSlider','bgmDuckToggle','introToggle','hookText','introSecsSlider','outroToggle','channelName','outroText','outroSecsSlider','brandHandle','particlesToggle','progressToggle','chimeToggle','wmToggle','elAuto','hideMainToggle','zoomSlider','vidScale','skyTolSlider','edgeSoftSlider','edgeShrinkSlider','inkSlider','inkRoughSlider','inkSplatSlider','mistSlider',
+    'personScaleSlider','personFadeSlider','personPosXSlider','personPosYSlider','personSideFadeSlider','personTopFadeSlider','personOvalSlider','personOpacitySlider','faceGlowSlider','personEnhanceSlider','faceXSlider','faceYSlider','cutTolSlider','multiplyToggle','capAnim','capHiToggle','capFontSelect','capColor','capHiColor','capSizeSlider','capPosYSlider','capWordsSlider','chunkWordsSlider','capOffsetSlider','voiceVolSlider','reverbType','reverbMixSlider','bgmVolSlider','bgmDuckToggle','introToggle','hookText','introSecsSlider','outroToggle','channelName','outroText','outroSecsSlider','brandHandle','particlesToggle','progressToggle','chimeToggle','wmToggle','elAuto','hideMainToggle','zoomSlider','vidScale','skyTolSlider','edgeSoftSlider','edgeShrinkSlider','mistSlider',
     'mainTextInput','mainFontSelect','mainColorPicker','mainFontSizeSlider','mainPosYSlider','mainPosXSlider',
     'subtextInput','subFontSelect','subColorPicker','subFontSizeSlider','subPosYSlider','subPosXSlider',
     'fadeSlider','shadowSlider','strokeSlider','formatSelect','scaleSelect'
@@ -716,7 +712,7 @@ if (window.__oauthPopup) throw new Error('oauth popup');
   const LABELS = [
     ['personScaleSlider','personScaleVal','%'], ['personPosXSlider','personPosXVal','%'],
     ['personPosYSlider','personPosYVal','%'], ['personFadeSlider','personFadeVal','%'],
-    ['personSideFadeSlider','personSideFadeVal','%'], ['personOpacitySlider','personOpacityVal','%'], ['personTopFadeSlider','personTopFadeVal','%'], ['personOvalSlider','personOvalVal','%'], ['faceGlowSlider','faceGlowVal','%'], ['personEnhanceSlider','personEnhanceVal','%'], ['faceXSlider','faceXVal','%'], ['faceYSlider','faceYVal','%'], ['cutTolSlider','cutTolVal',''], ['skyTolSlider','skyTolVal',''], ['capSizeSlider','capSizeVal',''], ['capPosYSlider','capPosYVal','%'], ['capWordsSlider','capWordsVal',''], ['chunkWordsSlider','chunkWordsVal',''], ['voiceVolSlider','voiceVolVal','%'], ['reverbMixSlider','reverbMixVal','%'], ['bgmVolSlider','bgmVolVal','%'], ['introSecsSlider','introSecsVal','s'], ['outroSecsSlider','outroSecsVal','s'], ['capOffsetSlider','capOffsetVal','s'], ['zoomSlider','zoomVal','%'], ['edgeSoftSlider','edgeSoftVal',''], ['edgeShrinkSlider','edgeShrinkVal',''], ['inkSlider','inkVal','%'], ['inkRoughSlider','inkRoughVal','%'], ['inkSplatSlider','inkSplatVal','%'], ['mistSlider','mistVal','%'],
+    ['personSideFadeSlider','personSideFadeVal','%'], ['personOpacitySlider','personOpacityVal','%'], ['personTopFadeSlider','personTopFadeVal','%'], ['personOvalSlider','personOvalVal','%'], ['faceGlowSlider','faceGlowVal','%'], ['personEnhanceSlider','personEnhanceVal','%'], ['faceXSlider','faceXVal','%'], ['faceYSlider','faceYVal','%'], ['cutTolSlider','cutTolVal',''], ['skyTolSlider','skyTolVal',''], ['capSizeSlider','capSizeVal',''], ['capPosYSlider','capPosYVal','%'], ['capWordsSlider','capWordsVal',''], ['chunkWordsSlider','chunkWordsVal',''], ['voiceVolSlider','voiceVolVal','%'], ['reverbMixSlider','reverbMixVal','%'], ['bgmVolSlider','bgmVolVal','%'], ['introSecsSlider','introSecsVal','s'], ['outroSecsSlider','outroSecsVal','s'], ['capOffsetSlider','capOffsetVal','s'], ['zoomSlider','zoomVal','%'], ['edgeSoftSlider','edgeSoftVal',''], ['edgeShrinkSlider','edgeShrinkVal',''], ['mistSlider','mistVal','%'],
     ['mainFontSizeSlider','mainFontSizeVal',''], ['mainPosYSlider','mainPosYVal','%'], ['mainPosXSlider','mainPosXVal','%'],
     ['subFontSizeSlider','subFontSizeVal',''], ['subPosYSlider','subPosYVal','%'], ['subPosXSlider','subPosXVal','%'],
     ['fadeSlider','fadeVal','%'], ['shadowSlider','shadowVal',''], ['strokeSlider','strokeVal','']
@@ -776,7 +772,7 @@ if (window.__oauthPopup) throw new Error('oauth popup');
     }
   }
   // ===== أدوات الصور: تمويه، تنعيم الحواف، حبر =====
-  let personVer = 0, inkSeed = 7;
+  let personVer = 0;
   const clamp01 = v => v < 0 ? 0 : v > 1 ? 1 : v;
   function rng(seed) { let t = seed >>> 0; return () => { t += 0x6D2B79F5; let r = Math.imul(t ^ t >>> 15, 1 | t); r ^= r + Math.imul(r ^ r >>> 7, 61 | r); return ((r ^ r >>> 14) >>> 0) / 4294967296; }; }
 
@@ -880,79 +876,6 @@ if (window.__oauthPopup) throw new Error('oauth popup');
     return { canvas: out, frac: removed / n };
   }
 
-  // ===== حبر خلف الصورة (يتبع شكل الصورة المقصوصة) =====
-  let inkCache = { key: '', ink: null };
-  function getInk(srcImg, w, h) {
-    const amt = Number($('inkSlider').value) / 100, rough = Number($('inkRoughSlider').value) / 100, splat = Number($('inkSplatSlider').value) / 100;
-    const key = [personVer, personFlipped, Math.round(w / 6), Math.round(h / 6), amt, rough, splat, inkSeed, $('edgeSoftSlider').value, $('edgeShrinkSlider').value].join('|');
-    if (inkCache.key === key) return inkCache.ink;
-    const R = amt * .13 * Math.max(w, h), pad = Math.round(R * 2.4) + 4;
-    const kk = Math.min(1, 440 / Math.max(w + 2 * pad, h + 2 * pad));
-    const sw = Math.max(8, Math.ceil((w + 2 * pad) * kk)), sh = Math.max(8, Math.ceil((h + 2 * pad) * kk));
-    const tc = document.createElement('canvas'); tc.width = sw; tc.height = sh;
-    const t = tc.getContext('2d');
-    t.save(); if (personFlipped) { t.translate(sw, 0); t.scale(-1, 1); }
-    const ix = personFlipped ? sw - (pad + w) * kk : pad * kk;
-    t.drawImage(srcImg, ix, pad * kk, w * kk, h * kk); t.restore();
-    const id = t.getImageData(0, 0, sw, sh), n = sw * sh, A = new Float32Array(n);
-    for (let i = 0; i < n; i++) A[i] = id.data[i * 4 + 3] / 255;
-    const rb = Math.max(1, R * kk * .9);
-    let B = boxBlur(A, sw, sh, rb);
-    const rnd = rng(inkSeed * 9973 + 11);
-    // ضجيج قيمي متعدد الطبقات يخلق فصوصاً عضوية على حافة الحبر
-    const mkNoise = cell => { const gw = Math.ceil(sw / cell) + 3, gh = Math.ceil(sh / cell) + 3, g = new Float32Array(gw * gh); for (let i = 0; i < g.length; i++) g[i] = rnd() * 2 - 1;
-      return (x, y) => { const fx = x / cell, fy = y / cell, x0 = Math.floor(fx), y0 = Math.floor(fy), tx = fx - x0, ty = fy - y0, sx = tx * tx * (3 - 2 * tx), sy = ty * ty * (3 - 2 * ty);
-        const v = (i, j) => g[(y0 + j) * gw + x0 + i];
-        return (v(0, 0) * (1 - sx) + v(1, 0) * sx) * (1 - sy) + (v(0, 1) * (1 - sx) + v(1, 1) * sx) * sy; }; };
-    const c1 = Math.max(4, R * kk * .55), n1 = mkNoise(c1), n2 = mkNoise(c1 * .38), n3 = mkNoise(c1 * .15);
-    const out = new Float32Array(n), thr = .3;
-    for (let y = 0; y < sh; y++) for (let x = 0; x < sw; x++) {
-      const i = y * sw + x, edgeBand = Math.min(1, B[i] * 6) * Math.min(1, (1 - B[i]) * 6 + .15);
-      const nz = (n1(x, y) * .6 + n2(x, y) * .3 + n3(x, y) * .1) * rough * .42 * (edgeBand + .25);
-      out[i] = clamp01((B[i] + nz - thr) / .05);
-    }
-    const oc = document.createElement('canvas'); oc.width = sw; oc.height = sh;
-    const o = oc.getContext('2d'); o.fillStyle = '#080808';
-    // ملء الكتلة
-    const fill = o.createImageData(sw, sh);
-    for (let i = 0; i < n; i++) { fill.data[i * 4] = 8; fill.data[i * 4 + 1] = 8; fill.data[i * 4 + 2] = 8; fill.data[i * 4 + 3] = Math.round(out[i] * 255); }
-    o.putImageData(fill, 0, 0);
-    // رذاذ وقطرات خارج الحافة
-    if (splat > 0 && amt > 0) {
-      const tries = Math.round(splat * 1400), maxDots = Math.round(40 + splat * 190); let dots = 0;
-      for (let k = 0; k < tries && dots < maxDots; k++) {
-        const x = rnd() * sw, y = rnd() * sh, bv = B[(y | 0) * sw + (x | 0)];
-        if (bv > .24 || bv < .004) continue;
-        const near = bv > .06;
-        const rr = (near ? (.8 + Math.pow(rnd(), 2.2) * R * kk * .3) : (.5 + Math.pow(rnd(), 2.6) * R * kk * .12));
-        o.beginPath();
-        if (rnd() < .22) { // خدش مستطيل يشبه الرذاذ المتطاير
-          const ang = Math.atan2(y - sh / 2, x - sw / 2); o.ellipse(x, y, rr * (1.6 + rnd() * 1.8), rr * .6, ang, 0, 6.2832);
-        } else o.arc(x, y, rr, 0, 6.2832);
-        o.fill(); dots++;
-      }
-    }
-    inkCache = { key, ink: { canvas: oc, pad } };
-    return inkCache.ink;
-  }
-  const inkOut = document.createElement('canvas');
-  function drawInk(srcImg, x, y, w, h) {
-    const { canvas: ic, pad } = getInk(srcImg, w, h);
-    const tw = w + 2 * pad, th = h + 2 * pad;
-    inkOut.width = Math.max(1, Math.round(tw)); inkOut.height = Math.max(1, Math.round(th));
-    const o = inkOut.getContext('2d'); o.clearRect(0, 0, inkOut.width, inkOut.height);
-    o.imageSmoothingQuality = 'high'; o.drawImage(ic, 0, 0, inkOut.width, inkOut.height);
-    const bot = Number($('personFadeSlider').value) / 100;
-    if (bot > 0) {
-      const fh = h * bot, y0 = pad + h - fh;
-      o.save(); o.globalCompositeOperation = 'destination-out';
-      const g = o.createLinearGradient(0, y0, 0, pad + h); softStops(g, 0);
-      o.fillStyle = g; o.fillRect(0, y0, inkOut.width, inkOut.height - y0 + 1); o.restore();
-    }
-    ctx.save(); ctx.globalAlpha = Number($('personOpacitySlider').value) / 100;
-    ctx.drawImage(inkOut, x - pad, y - pad, inkOut.width, inkOut.height); ctx.restore();
-  }
-
   // ضباب أبيض كثيف عند قاعدة الصورة يرتفع حتى فوق منتصف بقعة الحبر
   function drawMist(cx, y, pW, pH) {
     const m = Number($('mistSlider').value) / 100; if (m <= 0) return;
@@ -1046,9 +969,6 @@ if (window.__oauthPopup) throw new Error('oauth popup');
       p.fillStyle = g; p.fillRect(-R * 1.1, -R * 1.1, R * 2.2, R * 2.2);
       p.restore();
     }
-
-    // 5) الحبر خلف الصورة
-    if (Number($('inkSlider').value) > 0) drawInk(srcImg, x, y, w, h);
 
     ctx.save();
     ctx.globalAlpha = Number($('personOpacitySlider').value) / 100;
@@ -1367,7 +1287,7 @@ if (window.__oauthPopup) throw new Error('oauth popup');
         if (personImage === personOrig) runSkyCut(true);
         const P = { personScaleSlider: 86, personFadeSlider: 36, personSideFadeSlider: 14, personTopFadeSlider: 0, personOvalSlider: 0,
           personOpacitySlider: 100, faceGlowSlider: 0, personEnhanceSlider: 8, edgeSoftSlider: 2, edgeShrinkSlider: 1,
-          inkSlider: 28, inkRoughSlider: 60, inkSplatSlider: 55, mistSlider: 80 };
+          mistSlider: 80 };
         Object.entries(P).forEach(([k, v]) => setV(k, v));
         $('multiplyToggle').checked = false;
         syncLabels(); snapToSplash();
@@ -1375,11 +1295,6 @@ if (window.__oauthPopup) throw new Error('oauth popup');
         toast('تم تطبيق النمط الاحترافي');
       } catch (e) { console.error(e); status('تعذّر تطبيق النمط'); }
     }, 30);
-  });
-  $('inkSeedBtn').addEventListener('click', () => {
-    inkSeed = (inkSeed * 7 + 13) % 100000;
-    if (Number($('inkSlider').value) === 0) { setV('inkSlider', 28); syncLabels(); saveState(); }
-    render();
   });
 
   // ===== حفظ الجلسة (تبقى الصورة والصوت والكلمات حتى لو أغلق المتصفح الصفحة) =====
@@ -1437,6 +1352,12 @@ if (window.__oauthPopup) throw new Error('oauth popup');
   const easeOutCubic = t => 1 - Math.pow(1 - clamp01(t), 3);
   const easeOutBack = t => { t = clamp01(t); const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2); };
   const hex2rgb = h => { h = h.replace('#', ''); return [0, 2, 4].map(i => parseInt(h.substr(i, 2), 16)); };
+  // حماية تباين النص: الألوان المتوسطة (كالبني الفاتح) تُغمَّق قليلاً حتى تبلغ نسبة تباين 4.5:1 فوق الخلفية الفاتحة الثابتة؛ الألوان الفاتحة جدًا (أبيض) لا تُمسّ
+  const _ctC = new Map();
+  const contrastHex = (hx, min = 4.5, bgL = .82) => { const k = hx + min; if (_ctC.has(k)) return _ctC.get(k); let r = hex2rgb(hx), out = hx;
+    const lum = v => { const f = x => { x /= 255; return x <= .03928 ? x / 12.92 : Math.pow((x + .055) / 1.055, 2.4); }; return .2126 * f(v[0]) + .7152 * f(v[1]) + .0722 * f(v[2]); };
+    if (lum(r) > .08 && lum(r) < .6) { for (let n = 0; n < 16 && (bgL + .05) / (lum(r) + .05) < min; n++) r = r.map(x => Math.round(x * .93)); out = '#' + r.map(x => x.toString(16).padStart(2, '0')).join(''); }
+    _ctC.set(k, out); return out; };
   const mixHex = (a, b, t) => { const A = hex2rgb(a), B = hex2rgb(b); return `rgb(${A.map((v, i) => Math.round(v + (B[i] - v) * clamp01(t))).join(',')})`; };
 
   function vstat(msg, bar) {
@@ -1668,6 +1589,21 @@ if (window.__oauthPopup) throw new Error('oauth popup');
       </div></div>`).join('');
     box.scrollTop = top;
   }
+  // تدقيق صوتي لمزامنة الجمل: يقيس هل تبدأ كل جملة داخل كلام فعلي؛ الجملة التي تبدأ أثناء صمت وقبل بدء الكلام بين 0.15 و0.9 ث تُسحب إلى بداية الكلام (إصلاح للحالة الواضحة فقط، والباقي يُبلَّغ عنه)
+  function syncAudit(fix) {
+    if (!audioBuf || !words.length) return null;
+    const A = analyze(), ch = A.chunks, gs = rawGroups(); let inSpeech = 0, early = 0, fixed = 0, worst = 0;
+    gs.forEach(g => {
+      const s = g.start, c = ch.find(c => s >= c.s - .05 && s <= c.e + .05);
+      if (c) { inSpeech++; return; }
+      const nx = ch.find(c => c.s > s); if (!nx) return;
+      const d = nx.s - s; if (d > .15 && d <= .9) { early++; worst = Math.max(worst, d); if (fix) { retimeSentence(g.g, nx.s - .03, Math.max(g.end, nx.s + .3), true); fixed++; } }
+    });
+    if (fixed) { wordsVer++; try { saveWords(); } catch (_) {} }
+    const r = { sentences: gs.length, startInSpeechPct: gs.length ? Math.round(100 * inSpeech / gs.length) : 0, startedEarlyInSilence: early, fixed, worstEarlySec: +worst.toFixed(2) };
+    window.__syncReport = r; console.log('[sync] ' + JSON.stringify(r)); return r;
+  }
+  window.__syncAudit = syncAudit;
   function retimeSentence(g, s, e, silent) {
     const idx = []; words.forEach((w, i) => { if (w.g === g) idx.push(i); });
     if (!idx.length || !audioBuf) return;
@@ -2900,7 +2836,8 @@ if (window.__oauthPopup) throw new Error('oauth popup');
       if (asrCancel) vstat('تم الإيقاف. ما استُخرج ظاهر في المربع.');
       else if (!list.length) vstat('لم يُكتشف كلام في المقطع. جرّب لغة أخرى أو ألصق النص يدوياً.');
       else {
-        let elMsg = ''; if ($('elAuto').checked && $('elKey').value.trim()) { try { elMsg = await elAlign(); } catch (e) { elMsg = 'تعذّرت المحاذاة الدقيقة: ' + (e.message || e) + ' — بقي التوقيت التقريبي.'; } }
+        let elMsg = '', elOk = false; if ($('elAuto').checked && $('elKey').value.trim()) { try { elMsg = await elAlign(); elOk = true; } catch (e) { elMsg = 'تعذّرت المحاذاة الدقيقة: ' + (e.message || e) + ' — بقي التوقيت التقريبي.'; } }
+        window.__timingMethod = elOk ? 'ElevenLabs Forced Alignment (محاذاة صوتية على مستوى الكلمة)' : 'تقديري: توزيع الكلمات داخل مقاطع الكلام المكتشفة (ليس محاذاة حقيقية لكل كلمة)'; console.log('[timing] ' + window.__timingMethod);
         if ($('qaAuto').checked) setTimeout(qaRun, 200); vstat((elMsg ? elMsg + ' — ' : '') + `تم الاستخراج ✓ (${words.length} كلمة في ${new Set(words.map(w => w.g)).size} جملة). شغّل المقطع وراقب التوقيت، وللضبط الدقيق استخدم «مونتاج المزامنة» (مزامنة بالنقر أو ± لكل جملة).`, 100); }
     } catch (e) {
       console.error(e);
@@ -2946,7 +2883,7 @@ if (window.__oauthPopup) throw new Error('oauth popup');
     const mark = stage => { try { localStorage.setItem('asr_run', JSON.stringify({ model, stage })); } catch (_) {} };
     mark('تجهيز الصوت');
     // تحرير ذاكرة المحرر قبل التفريغ
-    pCanvas.width = 1; pCanvas.height = 1; inkOut.width = 1; inkOut.height = 1; inkCache = { key: '', ink: null }; refCache = { key: '', canvas: null };
+    pCanvas.width = 1; pCanvas.height = 1; refCache = { key: '', canvas: null };
     try {
       vstat('جارٍ تجهيز الصوت...', 0);
       const audio = await toMono16k(audioBuf), segs = planSegments(audio);
@@ -3016,7 +2953,7 @@ if (window.__oauthPopup) throw new Error('oauth popup');
   function drawCaptions(c, t, k) {
     if (!words.length || t == null) return;
     const off = Number($('capOffsetSlider').value), anim = $('capAnim').value, hiOn = $('capHiToggle').checked;
-    const main = $('capColor').value, hi = $('capHiColor').value;
+    const main = contrastHex($('capColor').value), hi = contrastHex($('capHiColor').value);
     const baseSize = Number($('capSizeSlider').value) * (W / 500), cyp = H * Number($('capPosYSlider').value) / 100;
     c.save(); c.setTransform(k, 0, 0, k, 0, 0); c.direction = 'rtl'; c.textAlign = 'center'; c.textBaseline = 'alphabetic';
 
@@ -3071,11 +3008,13 @@ if (window.__oauthPopup) throw new Error('oauth popup');
         if (anim === 'chunk') {
           const p = easeOutCubic((t - (g.start - LEAD)) / .26);
           const col = hiOn ? mixHex(hi, main, t < s - .06 ? 1 : (t - (e + .1)) / .2) : main;
-          putWord(c, w.t, xc, y + (1 - p) * size * .28, 1, gA, col, L.st);
+          const em = hiOn && t >= s - .06 && t <= e + .12 ? 1 + .07 * Math.sin(clamp01((t - s + .06) / Math.max(.3, e - s + .18)) * Math.PI) : 1;   // نبضة خفيفة للكلمة المنطوقة
+          putWord(c, w.t, xc, y + (1 - p) * size * .28, em, gA, col, L.st);
         } else if (anim === 'sentence') {
           const p = easeOutCubic((t - (g.start - .25)) / .55);
           const col = hiOn ? mixHex(hi, main, t < s - .06 ? 1 : (t - (e + .1)) / .2) : main;
-          putWord(c, w.t, xc, y + (1 - p) * size * .4, 1, gA, col, L.st);
+          const em = hiOn && t >= s - .06 && t <= e + .12 ? 1 + .07 * Math.sin(clamp01((t - s + .06) / Math.max(.3, e - s + .18)) * Math.PI) : 1;
+          putWord(c, w.t, xc, y + (1 - p) * size * .4, em, gA, col, L.st);
         } else if (anim === 'reveal') {
           const p = easeOutCubic((t - s + .12) / .3);
           putWord(c, w.t, xc, y + (1 - p) * size * .5, .9 + .1 * p, gA * p, mixHex(hi, main, (t - e) / .35), L.st);
@@ -3123,8 +3062,38 @@ if (window.__oauthPopup) throw new Error('oauth popup');
   $('pubTitleCount').textContent = $('pubTitle').value.length + '/100';
   $('ytRedirect').textContent = location.protocol === 'file:' ? '(افتح الأداة من رابط https أولاً)' : location.origin + location.pathname;
   const ytSt = (t, p) => { $('ytStatus').textContent = t || ''; if (p != null) { $('ytProg').classList.remove('hidden'); $('ytProgBar').style.width = Math.max(0, Math.min(100, p)) + '%'; } };
-  const pubTags = () => [...new Set($('pubTags').value.split(/[,،\s#]+/).map(x => x.trim()).filter(Boolean))].slice(0, 25);
-  const pubHash = (n = 5) => pubTags().slice(0, n).map(t => '#' + t.replace(/\s+/g, '_')).join(' ');
+  // قصّ نظيف عند حدّ كلمة (لا يقطع الكلمة العربية في منتصفها)
+  const smartCut = (s, n) => { s = String(s || '').trim(); if (s.length <= n) return s; const c = s.slice(0, n), i = c.lastIndexOf(' '); return (i > n * .55 ? c.slice(0, i) : c).replace(/[\s،,:؛\-–—]+$/, ''); };
+  const TAG_STOP = new Set(['على', 'في', 'من', 'إلى', 'الى', 'عن', 'مع', 'هذا', 'هذه', 'ذلك', 'التي', 'الذي', 'ما', 'لا', 'أن', 'إن', 'و', 'أو', 'ثم', 'قد', 'كل', 'هو', 'هي']);
+  // الوسوم تُفصل بالفواصل أو الأسطر فقط فتبقى الوسوم متعددة الكلمات كاملة؛ وإن لم توجد فواصل نفصل بالمسافات
+  const pubTags = () => { const raw = $('pubTags').value, parts = /[,،\n#]/.test(raw) ? raw.split(/[,،\n#]+/) : raw.split(/\s+/); const seen = new Set(), out = [];
+    parts.map(x => x.replace(/\s+/g, ' ').trim()).filter(x => x && x.length >= 2 && !TAG_STOP.has(x)).forEach(x => { const k = x.replace(/[ًٌٍَُِّْ]/g, ''); if (!seen.has(k)) { seen.add(k); out.push(x); } }); return out.slice(0, 25); };
+  const pubHash = (n = 4) => pubTags().filter(x => !/[^\p{L}\p{N}\s_]/u.test(x) && x.length <= 30).slice(0, n).map(t => '#' + t.replace(/\s+/g, '_')).join(' ');
+  // التحقق من البيانات الوصفية قبل أي إرسال؛ الأخطاء توقف النشر والتحذيرات تُسجَّل في __metaLog
+  window.__metaLog = window.__metaLog || [];
+  function metaValidate(title, desc, caption, platforms) {
+    const errs = [], warn = [], all = { title, desc, caption: caption || '' };
+    if (!title) errs.push('العنوان فارغ'); if (title.length > 100) errs.push('العنوان أطول من 100 حرف (' + title.length + ')');
+    Object.entries(all).forEach(([k, v]) => { if (/\uFFFD/.test(v)) errs.push('نص تالف (رمز �) في ' + k); });
+    if (!desc) warn.push('الوصف فارغ'); if (desc && desc.length < 40) warn.push('الوصف قصير جدًا (' + desc.length + ' حرفًا)');
+    if (title && desc && desc.trim() === title.trim()) warn.push('الوصف مطابق للعنوان');
+    const tg = pubTags(); if (!tg.length) warn.push('لا وسوم'); const hs = pubHash(4).split(' ').filter(Boolean); if (hs.length > 5) warn.push('هاشتاغات كثيرة');
+    if (platforms.includes('tiktok') && (caption || title).length > 2200) warn.push('تعليق تيك توك طويل وسيُقصّ');
+    if (platforms.includes('facebook')) warn.push('فيسبوك: يستلم النص المشترك (العنوان + الوصف + هاشتاغات) فقط، ولا وسوم داخلية');
+    if (platforms.includes('tiktok')) warn.push('تيك توك: الوسوم الداخلية غير مدعومة، تُرسل هاشتاغات في التعليق فقط');
+    window.__metaLog.push({ title: title.slice(0, 60), errs, warn }); console.log('[meta]', title.slice(0, 40), errs.length ? 'ERR ' + errs.join('؛') : 'ok', warn.length ? '| ' + warn.join('؛') : '');
+    return { errs, warn };
+  }
+  // تشابه الدفعة: عناوين متطابقة أو أوصاف متقاربة جدًا بين مقاطع ستُنشر
+  function metaBatch(clips) {
+    const tok = s => new Set(String(s || '').split(/[\s،,.؟!:؛\-()«»"']+/).filter(w => w.length > 2)), jac = (a, b) => { if (!a.size || !b.size) return 0; let i = 0; a.forEach(x => { if (b.has(x)) i++; }); return i / (a.size + b.size - i); };
+    for (let i = 0; i < clips.length; i++) for (let j = i + 1; j < clips.length; j++) {
+      const A = clips[i], B = clips[j], jt = jac(tok(A.title), tok(B.title)), jd = jac(tok(A.description), tok(B.description));
+      if ((A.title || '').trim() === (B.title || '').trim()) window.__metaLog.push({ title: A.title, errs: [], warn: ['عنوان مطابق تمامًا لمقطع آخر في الدفعة'] });
+      else if (jt > .8 || jd > .85) window.__metaLog.push({ title: A.title, errs: [], warn: ['تشابه عالٍ مع «' + (B.title || '').slice(0, 30) + '» (عنوان ' + Math.round(jt * 100) + '% / وصف ' + Math.round(jd * 100) + '%)'] });
+    }
+  }
+  window.__metaBatch = metaBatch;
   function pubCaption() { return [$('pubTitle').value.trim(), pubHash()].filter(Boolean).join(' '); }
   async function copyText(t) {
     try { await navigator.clipboard.writeText(t); return true; } catch (_) {}
@@ -3147,7 +3116,7 @@ if (window.__oauthPopup) throw new Error('oauth popup');
     try {
       const out = await geminiText([{ text: 'اكتب بيانات نشر لفيديو قصير عربي هادئ من النص التالي. العنوان: جذاب وصادق دون مبالغة أو تضليل، لا يزيد عن 70 حرفاً. الوصف: سطران إلى ثلاثة تلخّص الفائدة وتنتهي بدعوة لطيفة للمتابعة. الوسوم: من 8 إلى 12 كلمة أو عبارة قصيرة بلا رمز # وبعضها إنجليزي شائع إن لزم. أعد JSON فقط.\n\nالنص:\n' + text }], key,
         { type: 'OBJECT', properties: { title: { type: 'STRING' }, description: { type: 'STRING' }, tags: { type: 'ARRAY', items: { type: 'STRING' } } }, required: ['title', 'description', 'tags'] });
-      const j = JSON.parse(out); $('pubTitle').value = String(j.title || '').slice(0, 100); $('pubDesc').value = j.description || ''; $('pubTags').value = (j.tags || []).join(', ');
+      const j = JSON.parse(out); $('pubTitle').value = smartCut(j.title || '', 100); $('pubDesc').value = j.description || ''; $('pubTags').value = (j.tags || []).join(', ');
       PUBK.forEach(id => { try { localStorage.setItem('pub_' + id, $(id).value); } catch (_) {} }); $('pubTitleCount').textContent = $('pubTitle').value.length + '/100';
     } catch (e) { toast('تعذّر الاقتراح: ' + (e.message || e)); } finally { btn.disabled = false; btn.textContent = '✨ اقترح عنواناً ووصفاً ووسوماً (Gemini)'; }
   });
@@ -3236,8 +3205,9 @@ if (window.__oauthPopup) throw new Error('oauth popup');
     const mediaId = (up.file && up.file.id) || (up.media && up.media.id) || up.id; if (!mediaId) throw new Error('لم يُرجع BulkPublish معرّف الفيديو');
     bpSt(opts.scheduledAt ? '2/3 جارٍ جدولة المنشور...' : '2/3 جارٍ إنشاء المنشور...');
     const title = $('pubTitle').value.trim(), plats = [...new Set(picked.map(c => c.platform))], has = p => plats.includes(p);
-    const body = { content: [title, $('pubDesc').value.trim(), pubHash(5)].filter(Boolean).join('\n\n'), channels: picked.map(c => ({ channelId: c.id, platform: c.platform })), mediaFiles: [mediaId], deleteMediaAfterPublish: true, postFormat: 'reel', status: opts.scheduledAt ? 'scheduled' : 'draft' };
-    const pc = {}, to = {}, ps = {}; if (has('youtube')) { pc.youtube = ytDescription(); to.youtube = 'short'; ps.youtube = { title: title.slice(0, 100), privacyStatus: 'public', madeForKids: false }; } if (has('tiktok')) { pc.tiktok = [apTT || title, pubHash(5)].filter(Boolean).join(' ').slice(0, 2000); ps.tiktok = { privacyLevel: 'PUBLIC_TO_EVERYONE' }; }
+    { const mv = metaValidate(title, $('pubDesc').value.trim(), apTT, plats); if (mv.errs.length) throw new Error('بيانات النشر غير صالحة: ' + mv.errs.join('؛')); }
+    const body = { content: [title, $('pubDesc').value.trim(), pubHash(4)].filter(Boolean).join('\n\n'), channels: picked.map(c => ({ channelId: c.id, platform: c.platform })), mediaFiles: [mediaId], deleteMediaAfterPublish: true, postFormat: 'reel', status: opts.scheduledAt ? 'scheduled' : 'draft' };
+    const pc = {}, to = {}, ps = {}; if (has('youtube')) { pc.youtube = ytDescription(); to.youtube = 'short'; ps.youtube = { title: smartCut(title, 100), privacyStatus: 'public', madeForKids: false }; } if (has('tiktok')) { pc.tiktok = [smartCut(apTT || title, 150), pubHash(4)].filter(Boolean).join(' '); ps.tiktok = { privacyLevel: 'PUBLIC_TO_EVERYONE' }; }
     if (Object.keys(pc).length) body.platformContent = pc; if (Object.keys(to).length) body.postTypeOverrides = to; if (Object.keys(ps).length) body.platformSpecific = ps;
     if (opts.scheduledAt) { body.scheduledAt = opts.scheduledAt; body.timezone = (Intl.DateTimeFormat().resolvedOptions().timeZone) || 'UTC'; }
     const post = await bpReq('/posts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
@@ -3355,7 +3325,7 @@ if (window.__oauthPopup) throw new Error('oauth popup');
             const s0 = sOf(a), e0 = eOf(b), cont = made > 0 || a !== c.start; for (let i = a; i <= b; i++) cov[i] = true;
             if (e0 - s0 <= 88 && (e0 - s0 >= MINC || (!cont && e0 - s0 >= 8))) {
               const text = words.slice(sents[a].w0, sents[b].w1 + 1).map(w => w.t).join(' '), hooks = cont ? [] : (c.hooks || []).map(h => String(h).slice(0, 80)).filter(Boolean);
-              clips.push({ s: s0, e: e0, si: a, ei: b, hook: hooks[0] || '', hooks, title: String(c.ytTitle || '').slice(0, 70) + (cont ? ' (تتمة)' : ''), ttCaption: String(c.ttCaption || ''), score: Math.max(1, Math.min(10, Number(c.score) || 5)), why: (c.feeling ? 'الشعور: ' + c.feeling + ' — ' : '') + (c.why || ''), mood: c.mood || '', description: c.description || '', tags: (c.tags || []).map(t => String(t).replace(/^#/, '').trim()).filter(Boolean), text, w0: sents[a].w0, w1: sents[b].w1, tagsSrc: 'تقدير الذكاء' });
+              clips.push({ s: s0, e: e0, si: a, ei: b, hook: hooks[0] || '', hooks, title: cont ? smartCut(String(c.ytTitle || ''), 58) + ' (الجزء ' + (made + 1) + ')' : smartCut(String(c.ytTitle || ''), 70), ttCaption: String(c.ttCaption || ''), score: Math.max(1, Math.min(10, Number(c.score) || 5)), why: (c.feeling ? 'الشعور: ' + c.feeling + ' — ' : '') + (c.why || ''), mood: c.mood || '', description: c.description || '', tags: (c.tags || []).map(t => String(t).replace(/^#/, '').trim()).filter(Boolean), text, w0: sents[a].w0, w1: sents[b].w1, tagsSrc: 'تقدير الذكاء' });
               made++;
             }
             a = b + 1; while (a <= c.end && cov[a]) a++;
@@ -3458,11 +3428,13 @@ if (window.__oauthPopup) throw new Error('oauth popup');
     return new Promise(r => cv.toBlob(r, 'image/jpeg', .92));
   }
   let apTT = ''; // تعليق تيك توك للمقطع الحالي فقط
+  // إشارة إيقاف: أي خروج مبكر يُعلِم run.mjs فوراً بدل أن ينتظر ساعات
+  window.__apAbort = m => { window.__apAbortMsg = String(m || 'توقف'); window.__apFailed = Math.max(1, window.__apFailed || 0); window.__apDone = (window.__apDone || 0) + 1; };
   async function apRun() {
-    const picks = apClips.filter(c => c.pick); if (!picks.length) return toast('اختر مقطعاً واحداً على الأقل');
-    if (recBusy) return toast('هناك تسجيل جارٍ الآن');
+    const picks = apClips.filter(c => c.pick); if (!picks.length) return (window.__apAbort('لم يُختر أي مقطع'), toast('اختر مقطعاً واحداً على الأقل'));
+    if (recBusy) return (window.__apAbort('هناك تسجيل جارٍ'), toast('هناك تسجيل جارٍ الآن'));
     const autoPub = $('apPublish').checked, chans = autoPub ? bpPicked() : [];
-    if (autoPub && !chans.length) return toast('اضغط «جلب القنوات» في قسم النشر واختر قناة أولاً، أو ألغِ النشر التلقائي');
+    if (autoPub && !chans.length) return (window.__apAbort('لا توجد قناة نشر محددة'), toast('اضغط «جلب القنوات» في قسم النشر واختر قناة أولاً، أو ألغِ النشر التلقائي'));
     const sv = { mainSize: $('mainFontSizeSlider').value, main: $('mainTextInput').value, audioBuf, words, hook: $('hookText').value, transcript: $('transcript').value, title: $('pubTitle').value, desc: $('pubDesc').value, tags: $('pubTags').value };
     const btn = $('apRunBtn'); btn.disabled = true; $('apStartBtn').disabled = true; const done = [];
     try {
@@ -3740,30 +3712,32 @@ if (window.__oauthPopup) throw new Error('oauth popup');
   function drawIntro(c, k, t, Ti) {
     const p = clamp01(t / Ti), font = $('mainFontSelect').value, col = $('mainColorPicker').value, size = Number($('mainFontSizeSlider').value) * (W / 500) * 1.05;
     const hook = ($('hookText').value || '').trim(), nm = ($('channelName').value || '').trim(), s = sprites();
+    // ملاءمة الهوك: لا يتجاوز 3 أسطر مهما طال، بتصغير تدريجي
+    let hs = size; { const tk = hook ? hook.split(/\s+/) : []; measureCtx.direction = 'rtl'; for (let n = 0; n < 8 && tk.length; n++) { if (layoutRTL(measureCtx, tk, hs, W * .78, font).lines.length <= 3) break; hs *= .86; } }
     c.save(); c.setTransform(k, 0, 0, k, 0, 0);
     const zoom = 1.1 - .07 * easeOutCubic(clamp01(t / .7)) + .035 * easeInOut(p); c.save(); c.translate(W / 2, H * .45); c.scale(zoom, zoom); c.translate(-W / 2 + Math.sin(p * 2.2) * 8, -H * .45); c.drawImage(INTRO_BASE || bgImage, 0, 0, W, H); c.restore();
     c.fillStyle = INTRO_BASE ? 'rgba(255,255,255,.42)' : 'rgba(255,255,255,.58)'; c.fillRect(0, 0, W, H);
     inkBlots(c, easeOutExpo(t / 1.3), t, .3);
     drawFrame(c, easeInOut((t + .05) / .9), 1); drawVignette(c, .45);
-    const toks = hook ? hook.split(/\s+/) : [], tIn = .1 + toks.length * .1 + .3;
+    const toks = hook ? hook.split(/\s+/) : [], stg = Math.min(.1, Math.max(.025, Ti * .5 / Math.max(1, toks.length))), tIn = .1 + toks.length * stg + .3;
     withLayer(c, k, l => {
       l.direction = 'rtl'; l.textAlign = 'center'; l.textBaseline = 'alphabetic';
-      if (nm) { const a = easeOutCubic((t + .1) / .5); l.font = `${FONT_WEIGHT(font)} ${size * .52}px '${font}', serif`; putWord(l, nm, W / 2, H * .125 + (1 - a) * -14, 1, a * .9, BROWN, { shadow: 0, stroke: 0 }); }
+      if (nm) { const a = easeOutCubic((t + .1) / .5); let px = size * .52; l.font = `${FONT_WEIGHT(font)} ${px}px '${font}', serif`; const nw = l.measureText(nm).width; if (nw > W * .5) { px *= W * .5 / nw; l.font = `${FONT_WEIGHT(font)} ${px}px '${font}', serif`; } putWord(l, nm, W / 2, H * .125 + (1 - a) * -14, 1, a * .9, BROWN, { shadow: 0, stroke: 0 }); }
       if (toks.length) {
-        const L = layoutRTL(l, toks, size, W * .78, font), y0 = H * .43 - (L.lines.length - 1) * L.lh / 2; let wi = 0, widest = 0;
+        const L = layoutRTL(l, toks, hs, W * .78, font), y0 = H * .43 - (L.lines.length - 1) * L.lh / 2; let wi = 0, widest = 0;
         L.lines.forEach((ln, li) => {
           widest = Math.max(widest, ln.w); let xr = W / 2 + ln.w / 2;
           ln.it.forEach(it => {
-            const pw = (t - (.05 + wi * .1)) / .4, a = easeOutCubic(pw * 1.6); l.font = `${FONT_WEIGHT(font)} ${size}px '${font}', serif`;
-            putWord(l, it.t, xr - it.wd / 2, y0 + li * L.lh + (1 - easeOutBack(pw)) * size * .55, .94 + .06 * easeOutBack(pw), a, col, { shadow: 2, stroke: 0 }); xr -= it.wd + L.sp; wi++;
+            const pw = (t - (.05 + wi * stg)) / .4, a = easeOutCubic(pw * 1.6); l.font = `${FONT_WEIGHT(font)} ${hs}px '${font}', serif`;
+            putWord(l, it.t, xr - it.wd / 2, y0 + li * L.lh + (1 - easeOutBack(pw)) * hs * .55, .94 + .06 * easeOutBack(pw), a, col, { shadow: 2, stroke: 0 }); xr -= it.wd + L.sp; wi++;
           });
         });
       }
     }, (t - tIn) / 1.0);
     if (toks.length) {
-      const L = layoutRTL(c, toks, size, W * .78, font), y0 = H * .43 - (L.lines.length - 1) * L.lh / 2, widest = Math.max(...L.lines.map(x => x.w));
-      ornament(c, W / 2, y0 - size * 1.2, Math.min(W * .5, widest * .8 + 60), (t - .05) / .6, .95);
-      inkStroke(c, W / 2, y0 + (L.lines.length - 1) * L.lh + size * .72, Math.min(W * .58, widest * .9 + 40), easeOutCubic((t - tIn + .1) / .75), BROWN, .88);
+      const L = layoutRTL(c, toks, hs, W * .78, font), y0 = H * .43 - (L.lines.length - 1) * L.lh / 2, widest = Math.max(...L.lines.map(x => x.w));
+      ornament(c, W / 2, y0 - hs * 1.2, Math.min(W * .5, widest * .8 + 60), (t - .05) / .6, .95);
+      inkStroke(c, W / 2, y0 + (L.lines.length - 1) * L.lh + hs * .72, Math.min(W * .58, widest * .9 + 40), easeOutCubic((t - tIn + .1) / .75), BROWN, .88);
     }
     if (nm) ornament(c, W / 2, H * .125 + size * .42, W * .26, (t - .5) / .8, .8);
     c.restore(); drawGrain(c, t, .6);
@@ -3787,14 +3761,22 @@ if (window.__oauthPopup) throw new Error('oauth popup');
     c.save(); c.setTransform(k, 0, 0, k, 0, 0);
     const zoom = 1.07 - .05 * easeInOut(p); c.save(); c.translate(W / 2, H * .45); c.scale(zoom, zoom); c.translate(-W / 2, -H * .45); c.drawImage(bgImage, 0, 0, W, H); c.restore();
     c.fillStyle = 'rgba(255,255,255,.64)'; c.fillRect(0, 0, W, H);
-    inkBlots(c, easeOutExpo(t / 1.5), t, .45); drawFrame(c, easeInOut(t / 1.2), 1); drawVignette(c, .45);
-    const yN = H * .34;
+    inkBlots(c, easeOutExpo(t / 1.5), t, .45);
+    { const g = c.createRadialGradient(W / 2, H * .4, 0, W / 2, H * .4, W * .66); g.addColorStop(0, 'rgba(255,255,255,.66)'); g.addColorStop(1, 'rgba(255,255,255,0)'); c.fillStyle = g; c.fillRect(0, 0, W, H); }   // هالة بيضاء ترفع وضوح النص فوق بقعة الحبر
+    drawFrame(c, easeInOut(t / 1.2), 1); drawVignette(c, .45);
+    const yN = H * .34, DARK = '#6B5236';
     withLayer(c, k, l => {
       l.direction = 'rtl'; l.textAlign = 'center'; l.textBaseline = 'alphabetic';
+      const fnt = px => `${FONT_WEIGHT(font)} ${px}px '${font}', serif`;
+      const fitPx = (txt, px0, wMax) => { l.font = fnt(px0); const w = l.measureText(txt).width; return w > wMax ? px0 * wMax / w : px0; };
       const a1 = easeOutCubic(t / .8), b1 = easeOutBack(t / .9);
-      if (nm) { l.font = `${FONT_WEIGHT(font)} ${size * 1.6}px '${font}', serif`; putWord(l, nm, W / 2, yN + (1 - a1) * 28, .9 + .1 * b1, a1, col, { shadow: 2, stroke: 0 }); }
-      if (line) { const a2 = easeOutCubic((t - .6) / .7); l.font = `${FONT_WEIGHT(font)} ${size * .78}px '${font}', serif`; putWord(l, line, W / 2, yN + size * 1.75 + (1 - a2) * 18, 1, a2, BROWN, { shadow: 0, stroke: 0 }); }
-      if (hd) { const a4 = easeOutCubic((t - 1.6) / .7) * .85; l.font = `600 ${size * .55}px sans-serif`; l.direction = 'ltr'; putWord(l, hd, W / 2, H * .73, 1, a4, BROWN, { shadow: 0, stroke: 0 }); }
+      if (nm) { const px = fitPx(nm, size * 1.6, W * .84); l.font = fnt(px); putWord(l, nm, W / 2, yN + (1 - a1) * 28, .9 + .1 * b1, a1, col, { shadow: 2, stroke: 0 }); }
+      if (line) {
+        const a2 = easeOutCubic((t - .6) / .7), px0 = size * .78, wMax = W * .82; let px = fitPx(line, px0, wMax), rows = [line];
+        if (px < px0 * .62) { px = px0 * .62; const Lr = layoutRTL(l, line.split(/\s+/), px, wMax, font); rows = Lr.lines.slice(0, 2).map(x => x.it.map(i => i.t).join(' ')); if (Lr.lines.length > 2) rows[1] += '…'; }
+        l.font = fnt(px); rows.forEach((r, i) => putWord(l, r, W / 2, yN + size * 1.75 + i * px * 1.3 + (1 - a2) * 18, 1, a2, DARK, { shadow: 0, stroke: 3 }));
+      }
+      if (hd) { const a4 = easeOutCubic((t - 1.6) / .7); let px = size * .6; l.font = `700 ${px}px sans-serif`; l.direction = 'ltr'; const hw = l.measureText(hd).width; if (hw > W * .8) { px *= W * .8 / hw; l.font = `700 ${px}px sans-serif`; } putWord(l, hd, W / 2, H * .735, 1, a4, DARK, { shadow: 0, stroke: 3 }); }
     }, (t - 1.0) / 1.0);
     if (nm) ornament(c, W / 2, yN + size * .62, W * .5, (t - .45) / .9, .95);
     const cx = W / 2, cy = H * .565, bw = W * .44, bh = size * 1.9, pop = easeOutBack((t - .9) / .6), ap = easeOutCubic((t - .9) / .35);
@@ -3819,7 +3801,7 @@ if (window.__oauthPopup) throw new Error('oauth popup');
   function drawWatermark(c, k, t) {
     const nm = ($('channelName').value || '').trim(), hd = ($('brandHandle').value || '').trim(); if (!nm && !hd) return;
     const a = t == null ? 1 : easeOutCubic((t - 1.2) / .9); if (a <= .003) return;
-    const font = $('mainFontSelect').value, size = 17 * (W / 500), y = H * .895 - (1 - a) * 10;
+    const font = $('mainFontSelect').value, size = 17 * (W / 500), y = H * .858 - (1 - a) * 10;
     c.save(); c.setTransform(k, 0, 0, k, 0, 0); c.textAlign = 'center'; c.direction = 'rtl'; c.fillStyle = BROWN; c.font = `${FONT_WEIGHT(font)} ${size}px '${font}', serif`;
     if (nm) {
       const tw = c.measureText(nm).width, ln = Math.min(130, W * .11), gp = 20; c.globalAlpha = .72 * a; c.fillText(nm, W / 2, y);
@@ -3884,12 +3866,12 @@ if (window.__oauthPopup) throw new Error('oauth popup');
       try {
         const ch = audioBuf.getChannelData(0), win = Math.max(256, Math.floor(audioBuf.sampleRate * .05)); let s = 0, n = 0;
         for (let i = 0; i + win < ch.length; i += win * 2) { let e = 0; for (let j = 0; j < win; j += 4) e += ch[i + j] * ch[i + j]; e /= win / 4; if (e > 3e-5) { s += e; n++; } }
-        if (n) gdb = Math.max(-6, Math.min(18, -16 - (10 * Math.log10(s / n) + 20 * Math.log10(Math.max(.05, vol)))));
+        if (n) gdb = Math.max(-6, Math.min(12, -16 - (10 * Math.log10(s / n) + 20 * Math.log10(Math.max(.05, vol)))));
       } catch (_) {}
       const pre = ac.createGain(), comp = ac.createDynamicsCompressor(), lim = ac.createDynamicsCompressor();
       pre.gain.value = Math.pow(10, gdb / 20);
-      comp.threshold.value = -22; comp.knee.value = 14; comp.ratio.value = 3; comp.attack.value = .006; comp.release.value = .22;
-      lim.threshold.value = -3; lim.knee.value = 0; lim.ratio.value = 20; lim.attack.value = .001; lim.release.value = .08;
+      comp.threshold.value = -24; comp.knee.value = 14; comp.ratio.value = 2.5; comp.attack.value = .006; comp.release.value = .22;
+      lim.threshold.value = -4.5; lim.knee.value = 0; lim.ratio.value = 20; lim.attack.value = .001; lim.release.value = .08;
       pre.connect(comp); comp.connect(lim); lim.connect(out0); dest = pre; console.log('[audio] رفع الصوت ' + gdb.toFixed(1) + ' dB');
     }
     const g = ac.createGain(), src = ac.createBufferSource(), fxIn = ac.createGain(); src.buffer = audioBuf; src.connect(g); g.connect(fxIn); buildFx(ac, fxIn, dest, $('reverbType').value, Number($('reverbMixSlider').value));
@@ -3952,7 +3934,7 @@ if (window.__oauthPopup) throw new Error('oauth popup');
     } catch (e) { console.warn('webm fix', e); return blob; }
   }
   async function recordOnce(cfg, makeFrame, makeAudio, onProgress) {
-    let ac = null, stream = null, rec = null; capCache.map = new WeakMap(); capCache.on = true;
+    let ac = null, stream = null, rec = null, drawn = 0; capCache.map = new WeakMap(); capCache.on = true;
     try {
       const rw = Math.round(W * cfg.sc / 2) * 2, rh = Math.round(H * cfg.sc / 2) * 2, rc = document.createElement('canvas'); rc.width = rw; rc.height = rh;
       const { frame, total } = makeFrame(rc); frame(0);
@@ -3980,7 +3962,7 @@ if (window.__oauthPopup) throw new Error('oauth popup');
           if (recErr) return finish(() => fail(recErr));
           const nowMs = performance.now(); if (nowMs - lastDraw < 30) return;
           lastDraw = nowMs; const t = (nowMs - t0) / 1000; const sec = Math.floor(Math.max(0, t)); if (sec !== crumbSec) { crumbSec = sec; try { localStorage.setItem('ap_rec', `التسجيل عند الثانية ${sec} من ${Math.floor(total)}`); } catch (_) {} }
-          try { frame(Math.max(0, t)); } catch (e) { return finish(() => fail(e)); }
+          try { frame(Math.max(0, t)); drawn++; } catch (e) { return finish(() => fail(e)); }
           if (onProgress) onProgress(t, total);
           if (t > 3.5 && bytes === 0) return finish(() => fail(new Error('المتصفح لم يُنتج أي بيانات فيديو')));
           if (t >= total) return finish(done);
@@ -3996,7 +3978,7 @@ if (window.__oauthPopup) throw new Error('oauth popup');
       try { if (rec.state !== 'inactive') rec.stop(); } catch (_) {} await Promise.race([stopped, sleep(4000)]);
       if (cancelled) return { cancelled: true };
       if (!bytes) throw new Error('الملف الناتج فارغ');
-      return { blob: new Blob(chunks, { type: (rec.mimeType || cfg.mime || 'video/webm').split(';')[0] }), type: (rec.mimeType || cfg.mime || 'video/webm').split(';')[0], hasAudio, total, elapsed };
+      return { blob: new Blob(chunks, { type: (rec.mimeType || cfg.mime || 'video/webm').split(';')[0] }), type: (rec.mimeType || cfg.mime || 'video/webm').split(';')[0], hasAudio, total, elapsed, drawn };
     } finally {
       capCache.on = false; try { localStorage.removeItem('ap_rec'); } catch (_) {}
       try { if (rec && rec.state !== 'inactive') rec.stop(); } catch (_) {}
@@ -4051,6 +4033,7 @@ if (window.__oauthPopup) throw new Error('oauth popup');
       $('exportVideoBtn').classList.add('hidden'); $('cancelVideoBtn').classList.remove('hidden');
       rstat('جارٍ تجهيز الإطار...', 0); await ensureFonts();
       if ($('qaAuto').checked) { try { const rep = qaRun(), errs = rep.filter(i => i.sev === 'error').length; if (errs) rstat(`تنبيه: وجد الوكيل ${errs} خطأ في المونتاج (انظر قائمته). سأكمل الإنشاء.`); } catch (e) { console.warn('qa', e); } }
+      try { syncAudit(!!window.__schedMode); } catch (e) { console.warn('syncAudit', e); }
       forceStatic = true; render(true);
       const stat = document.createElement('canvas'); stat.width = W; stat.height = H; stat.getContext('2d').drawImage(canvas, 0, 0); forceStatic = false; render();
       if (!avKnown()) { try { await runCalibration(); } catch (e) { console.warn('calib', e); } }
@@ -4061,11 +4044,11 @@ if (window.__oauthPopup) throw new Error('oauth popup');
         const comp = makeComposer(bc, stat, o), t0 = performance.now(); for (let q = 0; q < 8; q++) comp.frame(o.Ti + 1 + q * .1); const ms = (performance.now() - t0) / 8;
         if (ms > 70 && cfgs[0].sc > .7) { cfgs[0].sc = .6667; cfgs[0].vbps = 2.8e6; rstat(`الجهاز بطيء نسبياً (${Math.round(ms)}م.ث للإطار)، سأنشئ بدقة 720p لحركة أنعم...`); await sleep(1200); }
       } catch (e) { console.warn('bench', e); }
-      let res = null, lastErr = null;
+      let res = null, lastErr = null, usedIdx = 0;
       for (let i = 0; i < cfgs.length && !res; i++) {
         try {
           res = await recordOnce(cfgs[i], rc => makeComposer(rc, stat, o), (ac, dest, aStart, total) => buildAudio(ac, dest, { ...o, total }, aStart), (t, total) => rstat(`جارٍ التسجيل${i ? ' (إعداد بديل ' + i + ')' : ''}... ${fmtDur(Math.max(0, Math.min(t, total)))} / ${fmtDur(total)}`, Math.max(0, Math.min(100, t / total * 100))));
-          if (res.cancelled) break;
+          if (res.cancelled) break; usedIdx = i;
         } catch (e) { lastErr = e; console.warn('attempt', i, e); res = null; if (i + 1 < cfgs.length) { rstat(`تعذّر الإعداد ${i + 1}: ${e.message || e.name}. أجرّب إعداداً أخف...`); await sleep(700); } }
       }
       if (res && res.cancelled) { rstat('تم إلغاء التسجيل'); return; }
@@ -4078,6 +4061,8 @@ if (window.__oauthPopup) throw new Error('oauth popup');
       if ($('qaAuto').checked) runVideoVerify(res.total, { Ti, cal: avCalib });
       rstat(`تم إنشاء الفيديو ✓ (${(res.blob.size / 1048576).toFixed(1)} MB)`, 100);
       window.__lastVideo = { size: res.blob.size, type: res.type, ext, total: res.total };
+      { const sc = cfgs[usedIdx].sc, rep = { w: Math.round(W * sc / 2) * 2, h: Math.round(H * sc / 2) * 2, mime: res.type, mb: +(res.blob.size / 1048576).toFixed(2), sec: +res.total.toFixed(1), drawFps: +(res.drawn / Math.max(.1, res.elapsed)).toFixed(1), config: usedIdx, degraded: usedIdx > 0 };
+        window.__exportReport = rep; console.log('[export] ' + JSON.stringify(rep) + (rep.degraded ? ' ⚠ استُخدم إعداد بديل أخف من المطلوب' : '') + (rep.drawFps < 20 ? ' ⚠ معدل رسم منخفض (' + rep.drawFps + ' إطار/ث): الحركة قد تبدو متقطعة' : '')); }
     } catch (e) {
       console.error(e); rstat('تعذّر إنشاء الفيديو: ' + diag(e));
     } finally {
@@ -4394,7 +4379,7 @@ ${agDescribeControls()}
         if ($('wzBp').value.trim() && !bpChannels.length) { say('جارٍ جلب قنوات النشر...'); $('bpLoadBtn').click(); for (let q = 0; q < 60 && !bpChannels.length; q++) await apSleep(150); }
         if (!bpChannels.length) throw new Error('لم تُجلب قنوات النشر، تحقق من مفتاح BulkPublish');
         $('apPublish').checked = true; say('فيديو اليوم: ' + next.title, 'ok'); await apRun();
-      } catch (e) { say('تعذّر: ' + (e.message || e), 'err'); } finally { b.disabled = false; }
+      } catch (e) { say('تعذّر: ' + (e.message || e), 'err'); window.__apAbort(e.message || e); } finally { b.disabled = false; }
     });
     const pad = n => String(n).padStart(2, '0');
     { const d = new Date(); d.setDate(d.getDate() + 1); $('wzSchedDate').value = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; }
@@ -4414,13 +4399,14 @@ ${agDescribeControls()}
         if (!audioBuf) throw new Error('الصوت غير محفوظ في الجهاز، اختر نفس ملف الصوت ثم اضغط «ابدأ»');
         const todo = apClips.filter(c => c.dueDate && (!c.status || c.status === 'pending' || c.status === 'failed'));
         if (!todo.length) throw new Error('وزّع المقاطع على الأيام أولاً بزر «وزّع المقاطع»');
+        try { window.__metaBatch(todo); } catch (_) {}
         if ($('wzBp').value.trim() && !bpChannels.length) { say('جارٍ جلب قنوات النشر...'); $('bpLoadBtn').click(); for (let q = 0; q < 60 && !bpChannels.length; q++) await apSleep(150); }
         if (!bpChannels.length) throw new Error('لم تُجلب قنوات النشر، تحقق من مفتاح BulkPublish');
         apClips.forEach(c => { c.pick = todo.includes(c); }); apRender(); $('apPublish').checked = true;
-        window.__schedMode = true; window.__vbpsCap = 2.6e6; $('vidScale').value = '0.6667';
+        window.__schedMode = true; window.__vbpsCap = 2.6e6; $('vidScale').value = '0.6667'; $('outroSecsSlider').value = '2';
         say(`سأجهّز ${todo.length} مقاطع وأجدولها واحدًا بعد الآخر. أبقِ الصفحة مفتوحة والشاشة مضاءة حتى تنتهي، وبعدها يمكنك إغلاق كل شيء.`);
         await apRun();
-      } catch (e) { say('تعذّر: ' + (e.message || e), 'err'); } finally { window.__schedMode = false; window.__vbpsCap = 0; b.disabled = false; }
+      } catch (e) { say('تعذّر: ' + (e.message || e), 'err'); window.__apAbort(e.message || e); } finally { window.__schedMode = false; window.__vbpsCap = 0; b.disabled = false; }
     });
     setTimeout(refresh, 1200); setInterval(refresh, 8000);
   })();
@@ -4521,7 +4507,7 @@ ${agDescribeControls()}
       say('جارٍ تجهيز الصورة الجديدة...'); const old = personImage; loadPerson(imf); await waitFor(() => personImage && personImage !== old, 8000, 100);
       let cutOk = false;
       if ($('wzAiCut').checked) { say('الذكاء يزيل خلفية الصورة بدقة (أول مرة قد تستغرق دقيقة)...'); $('aiCutBtn').click(); await apSleep(300); await waitFor(() => !$('aiCutBtn').disabled, 180000, 400); cutOk = /✓/.test($('cutStatus').textContent); say(cutOk ? 'أُزيلت الخلفية بدقة ✓' : 'تعذّرت الإزالة الذكية، سأستخدم قص السماء', cutOk ? 'ok' : 'err'); }
-      if ($('wzInk').checked) { say('جارٍ تطبيق نمط الحبر ومحاذاة الصورة...'); $('inkPresetBtn').click(); await apSleep(900); }
+      if ($('wzInk').checked) { say('جارٍ تطبيق النمط ومحاذاة الصورة...'); $('inkPresetBtn').click(); await apSleep(900); }
       try { saveState(); } catch (_) {} say('الصورة جاهزة ومحاذاة ومحفوظة ✓', 'ok');
     };
     // ---------- الصدى: قرار واحد يُحفظ لكل الفيديوهات ----------
