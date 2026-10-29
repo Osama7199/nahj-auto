@@ -68,7 +68,7 @@ const keys = { gemini: E.GEMINI_KEY, el: elKey, bp: BPKEY, ntfy: E.NTFY_TOPIC ||
   const chs = (j.channels || j.data || []).filter(c => c && c.id != null && c.platform);
   if (!chs.length) fail('المفتاح صالح لكن لا توجد قنوات مربوطة في BulkPublish. اربط القنوات من لوحة BulkPublish ثم أعد التشغيل');
   console.log('✔ BulkPublish: ' + chs.length + ' قناة (' + chs.map(c => c.platform).join('، ') + ')');
-  if (chs.length < 4) console.log('⚠ القنوات أقل من 4 (المتوقع YouTube وTikTok وInstagram وFacebook). تأكد أن المربوط هو ما تريده');
+  { const have = new Set(chs.map(c => String(c.platform).toLowerCase())), miss = ['youtube', 'tiktok', 'facebook'].filter(p => !have.has(p)); if (miss.length) console.log('⚠ منصات مستهدفة غير مربوطة في BulkPublish: ' + miss.join('، ')); }
 }
 // نخدم المجلد عبر http محلي بدل file:// حتى يعمل التخزين والشبكة كما في الموقع العادي
 const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.json': 'application/json', '.mp3': 'audio/mpeg', '.jpg': 'image/jpeg', '.png': 'image/png' };
@@ -133,9 +133,16 @@ await page.waitForSelector('#wzStart', { timeout: 60000 });
   if (want.mainColorPicker && String(want.mainColorPicker).toLowerCase() !== String(got.color || '').toLowerCase()) console.log(`⚠ لون العنوان في إعداداتك (${want.mainColorPicker}) لم يُطبَّق، المطبَّق: ${got.color}`);
 }
 
-let last = '';
+const seenLines = new Set(); let lastProg = '', lastPct = -1, lastPctAt = Date.now(), analyzing = true;
 const logTimer = setInterval(async () => {
-  try { const t = await page.evaluate(() => (document.getElementById('wzNote') || {}).textContent || ''); const p = await page.evaluate(() => (document.getElementById('wzProgTxt') || {}).textContent || ''); const cur = (t + '\n' + p).trim(); if (cur && cur !== last) { last = cur; console.log('—'.repeat(20) + '\n' + cur); } } catch (e) {}
+  try {
+    const t = await page.evaluate(() => (document.getElementById('wzNote') || {}).textContent || ''); const p = await page.evaluate(() => (document.getElementById('wzProgTxt') || {}).textContent || '');
+    t.split('\n').map(s => s.trim()).filter(Boolean).forEach(s => { if (!seenLines.has(s)) { seenLines.add(s); console.log(s); } });   // أسطر جديدة فقط
+    const pp = p.trim(); if (pp && pp !== lastProg) { lastProg = pp; console.log('  ▸ ' + pp); }
+    const m = pp.match(/(\d+)٪/); if (m) { const v = Number(m[1]); if (v !== lastPct) { lastPct = v; lastPctAt = Date.now(); } }
+    // حارس التعثر: لا تقدّم في التحليل منذ 8 دقائق ⇒ توقف مبكر برسالة واضحة بدل انتظار المهلة الكاملة
+    if (analyzing && lastPct >= 0 && Date.now() - lastPctAt > 8 * 60 * 1000) { clearInterval(logTimer); fail('توقف التحليل عند ' + lastPct + '٪ منذ أكثر من 8 دقائق (غالبًا ازدحام أو حدّ استخدام Gemini: 503/429). أعد التشغيل بعد قليل أو استخدم مفتاحًا آخر.', 1); }
+  } catch (e) {}
 }, 15000);
 
 if (E.RECITER) await page.fill('#wzReciter', E.RECITER);
@@ -147,7 +154,9 @@ await page.evaluate(({ d, t }) => { for (const [id, v] of [['wzSchedDate', d], [
 
 console.log('▶ بدء التحليل...');
 await page.click('#wzStart');
-await page.waitForFunction(() => window.__apState === 'ready' || window.__apState === 'error', null, { timeout: 20 * 60 * 1000, polling: 3000 });
+try { await page.waitForFunction(() => window.__apState === 'ready' || window.__apState === 'error', null, { timeout: 35 * 60 * 1000, polling: 3000 }); }
+catch (e) { clearInterval(logTimer); await page.screenshot({ path: path.join(root, 'out', 'analysis-timeout.png') }).catch(() => {}); await browser.close().catch(() => {}); fail('انتهت مهلة التحليل (35 دقيقة) عند: ' + (lastProg || 'غير معروف'), 1); }
+analyzing = false;
 const st = await page.evaluate(() => window.__apState);
 await page.screenshot({ path: path.join(root, 'out', 'after-analysis.png') }).catch(() => {});
 console.log('حالة التحليل: ' + st);
