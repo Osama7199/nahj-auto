@@ -22,9 +22,14 @@ on:
         description: 'اسم القارئ (اختياري)'
         required: false
         default: ''
+      selftest:
+        description: 'فحص الجاهزية فقط (yes/no): يختبر كل الحلقات في دقائق دون نشر ودون صوت'
+        required: false
+        default: 'no'
       start_date:
-        description: 'تاريخ أول نشر بصيغة YYYY-MM-DD'
-        required: true
+        description: 'تاريخ أول نشر بصيغة YYYY-MM-DD (غير مطلوب في فحص الجاهزية)'
+        required: false
+        default: ''
       time:
         description: 'ساعة النشر اليومية'
         required: true
@@ -43,6 +48,7 @@ jobs:
         with:
           node-version: 22
       - run: npm install --prefix server
+      - run: which ffmpeg || (sudo apt-get update -y && sudo apt-get install -y ffmpeg)
       - run: node server/run.mjs
         env:
           GEMINI_KEY: ${{ secrets.GEMINI_KEY }}
@@ -55,6 +61,7 @@ jobs:
           SETTINGS_URL: ${{ inputs.settings_url }}
           RECITER: ${{ inputs.reciter }}
           START_DATE: ${{ inputs.start_date }}
+          SELFTEST: ${{ inputs.selftest }}
           TIME: ${{ inputs.time }}
           TZ_ID: ${{ inputs.tz }}
       - uses: actions/upload-artifact@v4
